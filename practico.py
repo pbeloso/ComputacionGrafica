@@ -16,8 +16,13 @@ def main():
     vertFaces = []
     normalFaces = []
     texturesFaces = []
+
+    vertFacesW = []
+    normalFacesW = []
+    texturesFacesW = []
          
-    objParser(vertFaces, normalFaces, texturesFaces)       # Llamo al parser.
+    objParser("./Animaciones/knight_animado/knight_stand_0.obj", vertFaces, normalFaces, texturesFaces)       # Llamo al parser.
+    objParser("./Animaciones/weapon_knight_animada/weapon_k_stand_0.obj", vertFacesW, normalFacesW, texturesFacesW)    # Llamo al parser.
 
     #---------------------------------------------------------------------------------------
 
@@ -25,7 +30,9 @@ def main():
     glActiveTexture(GL_TEXTURE0)                    # Activo la textura 0 (hay 8 disponibles)
     text = loadTexture("./knight_good.png")         # Llamo a la funcion que levanta la textura a memoria de video
 
-    text2 = loadTexture("./knight.png")         # Llamo a la funcion que levanta la textura a memoria de video
+    text2 = loadTexture("./knight.png")         
+
+    text3 = loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
 
     #---------------------------------------------------------------------------------------
     
@@ -126,6 +133,26 @@ def main():
 
         glPopMatrix()
 
+    #---------------------------------------------------------------------------------------    
+
+        glPushMatrix()
+
+        glTranslatef(-30,0,-60)                               # Traslacion. (derecha, arriba, hacia adentro).
+        #glTranslatef(0,0,-3)
+
+        glRotatef(-90, 1,0,0)                               # Rotacion. (angulo, eje x, eje y, eje z).
+        #glRotatef(ang, 0,0,1)
+        #ang += 0.5
+
+        glVertexPointer(3, GL_FLOAT, 0, vertFacesW)          # Paso el array de vertices, de 3 coords en cada elemento, que son de tipo float.
+        glNormalPointer(GL_FLOAT, 0, normalFacesW)           # Paso el array de normales.
+        glTexCoordPointer(2, GL_FLOAT, 0, texturesFacesW)    # Paso la lista de coordenadas de textura para cada vertice
+
+        glBindTexture(GL_TEXTURE_2D, text3)                  # Cargo la textura "text" en la posicion activa (que es la 0 en este ejemplo)
+        glDrawArrays(GL_TRIANGLES, 0, len(vertFacesW)*3)     # Indico que voy a dibujar triangulos, usando el array de vertices.
+
+        glPopMatrix()
+
     #---------------------------------------------------------------------------------------
 
         glPushMatrix()
@@ -145,6 +172,24 @@ def main():
         glPopMatrix()
 
     #---------------------------------------------------------------------------------------
+
+        glPushMatrix()
+
+        glTranslatef(30,0,-60)
+        glRotatef(-90, 1,0,0)                               # Rotacion. (angulo, eje x, eje y, eje z).
+        glRotatef(243, 0,0,1)
+        
+
+        glVertexPointer(3, GL_FLOAT, 0, vertFacesW)          # Paso el array de vertices, de 3 coords en cada elemento, que son de tipo float.
+        glNormalPointer(GL_FLOAT, 0, normalFacesW)           # Paso el array de normales.
+        glTexCoordPointer(2, GL_FLOAT, 0, texturesFacesW)    # Paso la lista de coordenadas de textura para cada vertice
+
+        glBindTexture(GL_TEXTURE_2D, text3)                  # Cargo la textura "text" en la posicion activa (que es la 0 en este ejemplo)
+        glDrawArrays(GL_TRIANGLES, 0, len(vertFacesW)*3)     # Indico que voy a dibujar triangulos, usando el array de vertices.
+
+        glPopMatrix()
+
+    #---------------------------------------------------------------------------------------
     
         glBindTexture(GL_TEXTURE_2D, 0)                     # Luego de dibujar, desactivo la textura
 
@@ -158,8 +203,8 @@ def main():
     pygame.quit()
     quit()
 
-def objParser(vertFaces, normalFaces, texturesFaces):
-    objFile = open('knight_texturas.obj', 'r')
+def objParser(path, vertFaces, normalFaces, texturesFaces):
+    objFile = open(path, 'r')
     #objFile = open('box.obj', 'r')
 
     vertexList = []
