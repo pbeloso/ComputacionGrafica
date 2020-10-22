@@ -37,7 +37,7 @@ def main():
     
     #---------------------------------------------------------------------------------------
 
-    # Activo las texturas ( 8 disponibles).
+    # Activo las texturas ( 8 disponibles ).
 
     glEnable(GL_TEXTURE_2D)                         
     glActiveTexture(GL_TEXTURE0)       
@@ -70,7 +70,7 @@ def main():
     glEnable(GL_LIGHT0)   
     glLight(GL_LIGHT0, GL_DIFFUSE, [1.0,0.0,0.0,1])      
     glLight(GL_LIGHT0, GL_AMBIENT, [1,1,1,1])       
-    glLight(GL_LIGHT0, GL_POSITION, [0,100,-50,0])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
+    glLight(GL_LIGHT0, GL_POSITION, [0,100,-50,1])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
     glLight(GL_LIGHT0, GL_SPECULAR, [1,0,0,1])
 
     #---------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ def main():
     glViewport(0,0,cw*2,ch*2)            # Crea la matriz de escala, transforma de unidades arbitrarias a pixels.
     glFrustum(-1, 1, -1, 1, 1, 1000)     # Crea la matriz de Proyeccion. volumen de vista.
 
-    glEnable(GL_DEPTH_TEST)                         # Comparaciones de profundidad y actualizar el bufer de profundidad.
+    glEnable(GL_DEPTH_TEST)              # Comparaciones de profundidad y actualizar el bufer de profundidad.
 
     #glClearColor(0,0,1,1)               # Color de fondo.
     #---------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ def main():
                     pygame.quit()
                     quit()
 
-                if event.key == pygame.K_l:     # Con la letra L prendo y apago la iluminacion
+                if event.key == pygame.K_l:     # Con la letra l prendo y apago la iluminacion
                     light = not light
                     if(light):
                         glEnable(GL_LIGHTING)
@@ -165,7 +165,6 @@ def main():
 
 
         glRotatef(-90, 1,0,0)   # Rotacion (angulo, eje x, eje y, eje z).
-
 
         glVertexPointer(3, GL_FLOAT, 0, knight.vertFaces)          
         glNormalPointer(GL_FLOAT, 0, knight.normalFaces)           
