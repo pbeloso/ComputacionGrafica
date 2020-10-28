@@ -6,6 +6,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GL.shaders import *
 from obj import *
+from event import *
 
 def main():
 
@@ -17,23 +18,60 @@ def main():
     cw = 800
     ch = 600
     display = (cw,ch)
-    pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
+    screen = pygame.display.set_mode(display, DOUBLEBUF|OPENGLBLIT)
+    
+
+    background_image = pygame.image.load("prueba.png").convert()
 
     #---------------------------------------------------------------------------------------  
-
+    
     # Cargar archivos .obj.
-      
-    knight = obj()
-    knight.objParser("./Animaciones/knight_animado/knight_stand_0.obj")
 
-    weapon_k = obj()
-    weapon_k.objParser("./Animaciones/weapon_knight_animada/weapon_k_stand_0.obj")
+    stand = 39
+    wave = 10
+    salute = 10
+    run = 5
+    point = 11
+    pain = 3
+    jump = 5
+    flip = 11
+    fallback = 16
+    death = 5
+    attack = 7
+    crouch_attack = 8
 
-    hueteotl = obj()
-    hueteotl.objParser("./Animaciones/hueteotl_animado/hueteotl_stand_0.obj")
+    #---------------------------------------------------------------------------------------
 
-    weapon_h = obj()
-    weapon_h.objParser("./Animaciones/weapon_hueteotl_animada/weapon_stand_0.obj")
+    #. obj stand
+
+    knight_Stand = obj().objAnimation("./Animaciones/knight_animado/","knight_stand_",stand)
+    knight = knight_Stand[0]
+
+    weaponK_Stand = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_stand_",stand)
+    weapon_k = weaponK_Stand[0]
+
+    hueteotl_Stand = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_stand_",stand)
+    hueteotl = hueteotl_Stand[0]
+
+    weaponH_Stand = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_stand_",stand)
+    weapon_h = weaponH_Stand[0]
+    
+    #---------------------------------------------------------------------------------------
+
+    #---------------------------------------------------------------------------------------
+
+    #. obj stand
+    knight_Attack = obj().objAnimation("./Animaciones/knight_animado/","knight_attack_",attack)
+    knightAttack = knight_Attack[0]
+
+    weaponK_Attack = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_attack_",attack)
+    weapon_k_Attack = weaponK_Attack[0]
+
+    hueteotl_Death = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_death_fallback_",death)
+    hueteotlDeath = hueteotl_Death[0]
+
+    weaponH_Death = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_death_fallback_",death)
+    weapon_h_Death = weaponH_Death[0]
     
     #---------------------------------------------------------------------------------------
 
@@ -95,16 +133,79 @@ def main():
     bfcCW = True
     light = False
 
+    # Variables de animaciones
+    
+    eventos = events_obj()
+    eventos.setTimeEvents()
 
+    stand = True
+    attack = False
+
+    death = False
+    killed = False
+
+    countKnight = 0
+    countHueteotl = 0
     #---------------------------------------------------------------------------------------
     
     while True:
+
+        screen.blit(background_image,[0,0])
         
         for event in pygame.event.get():        
             if event.type == pygame.QUIT:       
                 pygame.quit()
                 quit()
+
+            if event.type == eventos.knight:
+                if stand:
+                    knight = knight_Stand[countKnight]
+                    weapon_k = weaponK_Stand[countKnight]
+                    if countKnight >= (len(knight_Stand) - 1):
+                        countKnight = 0
+                    else:
+                        countKnight += 1
+            
+            if event.type == eventos.hueteotl:
+                if  death == False:
+                    hueteotl = hueteotl_Stand[countHueteotl]
+                    weapon_h = weaponH_Stand[countHueteotl]
+                    if countHueteotl >= (len(hueteotl_Stand) - 1):
+                        countHueteotl = 0
+                    else:
+                        countHueteotl += 1
+            
+            if attack:     
+                knight = knight_Attack[countKnight]
+                weapon_k = weaponK_Attack[countKnight]
+                if countKnight >= (len(knight_Attack) - 1):
+                    stand = not stand   
+                    attack = not attack
+                    death = not death
+                    countKnight = 0
+                    countHueteotl = 0
+                else:
+                    countKnight += 1
+            
+            if death:
+
+                hueteotl = hueteotl_Death[countHueteotl]
+                weapon_h = weaponH_Death[countHueteotl]
+                if countHueteotl >= (len(hueteotl_Death) - 1):
+                    countHueteotl = 4
+                else:
+                    countHueteotl += 1
+
+
+
+
             if event.type == pygame.KEYDOWN:    # Evento tecla presionada.
+
+                if event.key == pygame.K_w:     # Letra w ataca el caballero
+                    stand = not stand   
+                    attack = not attack
+                    countKnight = 0
+
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
@@ -161,7 +262,7 @@ def main():
 
         glPushMatrix()
 
-        glTranslatef(-30,0,-60) # Traslacion (derecha, arriba, hacia adentro).
+        glTranslatef(-30,0,-70) # Traslacion (derecha, arriba, hacia adentro).
 
 
         glRotatef(-90, 1,0,0)   # Rotacion (angulo, eje x, eje y, eje z).
@@ -179,7 +280,7 @@ def main():
 
         glPushMatrix()
 
-        glTranslatef(-30,0,-60) # Traslacion. (derecha, arriba, hacia adentro).
+        glTranslatef(-30,0,-70) # Traslacion. (derecha, arriba, hacia adentro).
 
 
         glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
@@ -197,7 +298,7 @@ def main():
 
         glPushMatrix()
 
-        glTranslatef(30,0,-60)
+        glTranslatef(30,0,-70)
         glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
         glRotatef(230, 0,0,1)
         
@@ -215,7 +316,7 @@ def main():
 
         glPushMatrix()
 
-        glTranslatef(30,0,-60)
+        glTranslatef(30,0,-70)
         glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
         glRotatef(243, 0,0,1)
         

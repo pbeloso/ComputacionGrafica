@@ -50,4 +50,18 @@ class obj:
                 textFace = [ textList[int(text[0])-1], textList[int(text[1])-1], textList[int(text[2])-1] ]
                 self.texturesFaces.append(textFace)
             
+    def objAnimation(self, pathA, name, large):
+
+        objAnimation = []
+
+        for x in range(0, large + 1):
+            objAux = obj()
+            path = pathA + name + str(x) + ".obj"
+            
+            objAux.objParser(path)
+            objAnimation.append(objAux)
+        
+        return objAnimation
+
+
 
