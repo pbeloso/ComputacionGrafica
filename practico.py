@@ -1,4 +1,5 @@
 import numpy
+import random
 import pygame
 
 from pygame.locals import *
@@ -7,6 +8,9 @@ from OpenGL.GLU import *
 from OpenGL.GL.shaders import *
 from obj import *
 from event import *
+
+import texture
+import draw
 
 def main():
 
@@ -18,31 +22,24 @@ def main():
     cw = 800
     ch = 600
     display = (cw,ch)
-    screen = pygame.display.set_mode(display, DOUBLEBUF|OPENGLBLIT)
+    pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
     
 
-    background_image = pygame.image.load("prueba.png").convert()
+
 
     #---------------------------------------------------------------------------------------  
     
     # Cargar archivos .obj.
 
     stand = 39
-    wave = 10
-    salute = 10
-    run = 5
-    point = 11
-    pain = 3
-    jump = 5
-    flip = 11
-    fallback = 16
     death = 5
+    deathSlow = 7
     attack = 7
-    crouch_attack = 8
+    run = 5
 
-    #---------------------------------------------------------------------------------------
+    # .obj knight
 
-    #. obj stand
+    # stand
 
     knight_Stand = obj().objAnimation("./Animaciones/knight_animado/","knight_stand_",stand)
     knight = knight_Stand[0]
@@ -50,29 +47,60 @@ def main():
     weaponK_Stand = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_stand_",stand)
     weapon_k = weaponK_Stand[0]
 
+    # attack
+
+    knight_Attack = obj().objAnimation("./Animaciones/knight_animado/","knight_attack_",attack)
+    weaponK_Attack = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_attack_",attack)
+
+    # death
+
+    knight_Death0 = obj().objAnimation("./Animaciones/knight_animado/","knight_death_fallback_",death)
+    weaponK_Death0 = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_death_fallback_",death)
+
+    knight_Death1 = obj().objAnimation("./Animaciones/knight_animado/","knight_death_fallforward_",death)
+    weaponK_Death1 = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_death_fallforward_",death)
+
+    knight_Death2 = obj().objAnimation("./Animaciones/knight_animado/","knight_death_fallbackslow_",deathSlow)
+    weaponK_Death2 = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_death_fallbackslow_",deathSlow)
+
+    # run
+
+    knight_Run = obj().objAnimation("./Animaciones/knight_animado/","knight_run_",run)
+    weaponK_Run = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_run_",run)
+
+    #---------------------------------------------------------------------------------------
+
+    # .obj hueteotl 
+
+    # stand
+
     hueteotl_Stand = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_stand_",stand)
     hueteotl = hueteotl_Stand[0]
 
     weaponH_Stand = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_stand_",stand)
     weapon_h = weaponH_Stand[0]
-    
-    #---------------------------------------------------------------------------------------
 
-    #---------------------------------------------------------------------------------------
+    # attack
 
-    #. obj stand
-    knight_Attack = obj().objAnimation("./Animaciones/knight_animado/","knight_attack_",attack)
-    knightAttack = knight_Attack[0]
+    hueteotl_Attack = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_attack_",attack)
+    weaponH_Attack = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_attack_",attack)
 
-    weaponK_Attack = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_attack_",attack)
-    weapon_k_Attack = weaponK_Attack[0]
+    # death 
 
-    hueteotl_Death = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_death_fallback_",death)
-    hueteotlDeath = hueteotl_Death[0]
+    hueteotl_Death0 = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_death_fallback_",death)
+    weaponH_Death0 = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_death_fallback_",death)
 
-    weaponH_Death = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_death_fallback_",death)
-    weapon_h_Death = weaponH_Death[0]
-    
+    hueteotl_Death1 = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_death_fallforward_",death)
+    weaponH_Death1 = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_death_fallforward_",death)
+
+    hueteotl_Death2 = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_death_fallbackslow_",deathSlow)
+    weaponH_Death2 = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_death_fallbackslow_",deathSlow)
+
+    # run
+
+    hueteotl_Run = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_run_",run)
+    weaponH_Run = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_run_",run)
+
     #---------------------------------------------------------------------------------------
 
     # Activo las texturas ( 8 disponibles ).
@@ -82,15 +110,13 @@ def main():
 
     # Funcion que levanta la textura a memoria de video            
 
-    text = loadTexture("./knight_good.png")         
+    tex = texture.loadTexture("./knight_good.png")               
 
-    text2 = loadTexture("./knight.png")         
+    tex3 = texture.loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
 
-    text3 = loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
+    tex5 = texture.loadTexture("./Animaciones/hueteotl_animado/hueteotl.png")
 
-    text5 = loadTexture("./Animaciones/hueteotl_animado/hueteotl.png")
-
-    text6 = loadTexture("./Animaciones/weapon_hueteotl_animada/weapon.png")
+    tex6 = texture.loadTexture("./Animaciones/weapon_hueteotl_animada/weapon.png")
 
     #---------------------------------------------------------------------------------------
     
@@ -140,23 +166,35 @@ def main():
 
     stand = True
     attack = False
-
     death = False
-    killed = False
+
+    stand_h = True
+    attack_h = False 
+    death_h = False
 
     countKnight = 0
     countHueteotl = 0
+
+    count_h = 0
+    count_k = 0
+
+    typeofDeath = 0
+
+    pos_h = 25
+    ang_h = 210
+
+    pos_k = -25
+    ang_k = 0
+ 
     #---------------------------------------------------------------------------------------
     
     while True:
-
-        screen.blit(background_image,[0,0])
-        
         for event in pygame.event.get():        
             if event.type == pygame.QUIT:       
                 pygame.quit()
                 quit()
 
+            # Evento incial stand knight
             if event.type == eventos.knight:
                 if stand:
                     knight = knight_Stand[countKnight]
@@ -165,9 +203,10 @@ def main():
                         countKnight = 0
                     else:
                         countKnight += 1
-            
+
+            # Evento incial stand hueteotl
             if event.type == eventos.hueteotl:
-                if  death == False:
+                if  stand_h:
                     hueteotl = hueteotl_Stand[countHueteotl]
                     weapon_h = weaponH_Stand[countHueteotl]
                     if countHueteotl >= (len(hueteotl_Stand) - 1):
@@ -175,37 +214,158 @@ def main():
                     else:
                         countHueteotl += 1
             
-            if attack:     
+            # Evento ataque de knight
+            if attack and death == False:     
                 knight = knight_Attack[countKnight]
                 weapon_k = weaponK_Attack[countKnight]
                 if countKnight >= (len(knight_Attack) - 1):
-                    stand = not stand   
-                    attack = not attack
-                    death = not death
+                    stand = True   
+                    attack = False
+                    death_h = True
+                    stand_h = False
+                    typeofDeath = random.randint(0, 2)
                     countKnight = 0
                     countHueteotl = 0
                 else:
                     countKnight += 1
-            
-            if death:
 
-                hueteotl = hueteotl_Death[countHueteotl]
-                weapon_h = weaponH_Death[countHueteotl]
-                if countHueteotl >= (len(hueteotl_Death) - 1):
-                    countHueteotl = 4
+            # Evento ataque de hueteotl
+            if attack_h and death_h == False:
+                hueteotl = hueteotl_Attack[countHueteotl]
+                weapon_h = weaponH_Attack[countHueteotl]
+                if countHueteotl >= (len(hueteotl_Attack) - 1):
+                    stand_h = True
+                    attack_h = False
+                    death = True
+                    stand = False
+                    typeofDeath = random.randint(0, 2)
+                    countHueteotl = 0
+                    countKnight = 0
                 else:
                     countHueteotl += 1
 
+            # Evento muerte de hueteotl, random de sus 3 muertes 
+            if death_h:
+                if attack_h == False and stand_h == False:
+                    if typeofDeath == 0:
+                        hueteotl = hueteotl_Death0[countHueteotl]
+                        weapon_h = weaponH_Death0[countHueteotl]
+                        if countHueteotl >= (len(hueteotl_Death0) - 1):
+                            countHueteotl = len(hueteotl_Death0) - 1
+                        else:
+                            countHueteotl += 1
+                    if typeofDeath == 1:
+                        hueteotl = hueteotl_Death1[countHueteotl]
+                        weapon_h = weaponH_Death1[countHueteotl]
+                        if countHueteotl >= (len(hueteotl_Death1) - 1):
+                            countHueteotl = len(hueteotl_Death1) - 1
+                        else:
+                            countHueteotl += 1
+                    if typeofDeath == 2:
+                        hueteotl = hueteotl_Death2[countHueteotl]
+                        weapon_h = weaponH_Death2[countHueteotl]
+                        if countHueteotl >= (len(hueteotl_Death2) - 1):
+                            countHueteotl = len(hueteotl_Death2) - 1
+                        else:
+                            countHueteotl += 1
+            
+            # Evento muerte de knight, random de sus 3 muertes
+            if death:
+                if attack == False and stand == False:
+                    if typeofDeath == 0:
+                        knight = knight_Death0[countKnight]
+                        weapon_k = weaponK_Death0[countKnight]
+                        if countKnight >= (len(knight_Death0) - 1):
+                            countKnight = len(knight_Death0) - 1
+                        else:
+                            countKnight += 1
+                    if typeofDeath == 1:
+                        knight = knight_Death1[countKnight]
+                        weapon_k = weaponK_Death1[countKnight]
+                        if countKnight >= (len(knight_Death1) - 1):
+                            countKnight = len(knight_Death1) - 1
+                        else:
+                            countKnight += 1
+                    if typeofDeath == 2:
+                        knight = knight_Death2[countKnight]
+                        weapon_k = weaponK_Death2[countKnight]
+                        if countKnight >= (len(knight_Death2) - 1):
+                            countKnight = len(knight_Death2) - 1
+                        else:
+                            countKnight += 1
 
+            # Evento huir de hueteotl
+            if stand_h == False and attack_h == False and death_h == False:
+                ang_h = -20
+                hueteotl = hueteotl_Run[countHueteotl]
+                weapon_h = weaponH_Run[countHueteotl]
+                if countHueteotl >= (len(hueteotl_Run) - 1):
+                    count_h += 1
+                    countHueteotl = 0
+                    if count_h >= 7:
+                        stand_h = True 
+                        count_h = 0   
+                else:
+                    countHueteotl += 1
+                    pos_h += 2
+
+            # Evento huir de knight
+            if stand == False and attack == False and death == False:
+                ang_k = 230
+                knight = knight_Run[countKnight]
+                weapon_k = knight_Run[countKnight]
+                if countKnight >= (len(knight_Run) - 1):
+                    count_k += 1 
+                    countKnight = 0
+                    if count_k >= 7:
+                        stand = True
+                        count_k = 0
+                else:
+                    countKnight += 1
+                    pos_k -= 2
 
 
             if event.type == pygame.KEYDOWN:    # Evento tecla presionada.
 
-                if event.key == pygame.K_w:     # Letra w ataca el caballero
-                    stand = not stand   
-                    attack = not attack
+                if event.key == pygame.K_w:     # Letra w ataca knight
+                    stand = False   
+                    attack = True
                     countKnight = 0
 
+                if event.key == pygame.K_o:     # letra o ataca hueteolt
+                    stand_h = False
+                    attack_h =  True 
+                    countHueteotl = 0
+
+                if event.key == pygame.K_p:     # letra o corre hueteolt
+                    stand_h = False
+                    countHueteotl = 0 
+                
+                if event.key == pygame.K_q:     # letra q corre knight
+                    stand = False
+                    countKnight = 0 
+
+                if event.key == pygame.K_r:     # letra r, reinicia pelea
+                    stand = True
+                    attack = False
+                    death = False
+
+                    stand_h = True
+                    attack_h = False 
+                    death_h = False
+
+                    countKnight = 0
+                    countHueteotl = 0
+
+                    count_k = 0
+                    count_h = 0
+
+                    typeofDeath = 0
+                    pos_h = 25
+                    ang_h = 210  
+
+                    ang_k = 0
+                    pos_k = -25 
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
@@ -259,77 +419,17 @@ def main():
         glEnableClientState(GL_TEXTURE_COORD_ARRAY)        
 
     #---------------------------------------------------------------------------------------    
+        
+        # knight
 
-        glPushMatrix()
-
-        glTranslatef(-30,0,-70) # Traslacion (derecha, arriba, hacia adentro).
-
-
-        glRotatef(-90, 1,0,0)   # Rotacion (angulo, eje x, eje y, eje z).
-
-        glVertexPointer(3, GL_FLOAT, 0, knight.vertFaces)          
-        glNormalPointer(GL_FLOAT, 0, knight.normalFaces)           
-        glTexCoordPointer(2, GL_FLOAT, 0, knight.texturesFaces)    
-
-        glBindTexture(GL_TEXTURE_2D, text)                         
-        glDrawArrays(GL_TRIANGLES, 0, len(knight.vertFaces)*3)    
-
-        glPopMatrix()
-
-    #---------------------------------------------------------------------------------------    
-
-        glPushMatrix()
-
-        glTranslatef(-30,0,-70) # Traslacion. (derecha, arriba, hacia adentro).
-
-
-        glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
-
-        glVertexPointer(3, GL_FLOAT, 0, weapon_k.vertFaces)          
-        glNormalPointer(GL_FLOAT, 0, weapon_k.normalFaces)           
-        glTexCoordPointer(2, GL_FLOAT, 0, weapon_k.texturesFaces)   
-
-        glBindTexture(GL_TEXTURE_2D, text3)      
-        glDrawArrays(GL_TRIANGLES, 0, len(weapon_k.vertFaces)*3)     
-
-        glPopMatrix()
+        draw.drawObject(pos_k, ang_k, knight, weapon_k, tex, tex3)
 
     #---------------------------------------------------------------------------------------
 
-        glPushMatrix()
-
-        glTranslatef(30,0,-70)
-        glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
-        glRotatef(230, 0,0,1)
+        # hueteotl
         
-
-        glVertexPointer(3, GL_FLOAT, 0, hueteotl.vertFaces)         
-        glNormalPointer(GL_FLOAT, 0, hueteotl.normalFaces)           
-        glTexCoordPointer(2, GL_FLOAT, 0, hueteotl.texturesFaces)    
-
-        glBindTexture(GL_TEXTURE_2D, text5)                  
-        glDrawArrays(GL_TRIANGLES, 0, len(hueteotl.vertFaces)*3)     
-
-        glPopMatrix()
-
-    #---------------------------------------------------------------------------------------
-
-        glPushMatrix()
-
-        glTranslatef(30,0,-70)
-        glRotatef(-90, 1,0,0)   # Rotacion. (angulo, eje x, eje y, eje z).
-        glRotatef(243, 0,0,1)
+        draw.drawObject(pos_h, ang_h, hueteotl, weapon_h, tex5, tex6)
         
-
-        glVertexPointer(3, GL_FLOAT, 0, weapon_h.vertFaces)          
-        glNormalPointer(GL_FLOAT, 0, weapon_h.normalFaces)           
-        glTexCoordPointer(2, GL_FLOAT, 0, weapon_h.texturesFaces)    
-
-        glBindTexture(GL_TEXTURE_2D, text6)                  
-        glDrawArrays(GL_TRIANGLES, 0, len(weapon_h.vertFaces)*3)     
-
-        glPopMatrix()
-
     #---------------------------------------------------------------------------------------
     
         # Luego de dibujar, desactivo todo.
@@ -345,25 +445,5 @@ def main():
     glDeleteTextures([text])
     pygame.quit()
     quit()
-
-def loadTexture(path):
-
-    surf = pygame.image.load(path)                  # Cargo imagen en memoria
-    surf = pygame.transform.flip(surf, False, True) # Espejo la imagen
-
-    image = pygame.image.tostring(surf, 'RGBA', 1)  # Obtengo la matriz de colores de la imagen.
-    
-    ix, iy = surf.get_rect().size       # Obentego las dimensiones de la imagen
-    texid = glGenTextures(1)            # Textura vacia en memoria de video
-    glBindTexture(GL_TEXTURE_2D, texid) # Activo textura
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
-    
-    glBindTexture(GL_TEXTURE_2D, 0)
-    
-    return texid
 
 main()  
