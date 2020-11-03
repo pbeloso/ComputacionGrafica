@@ -36,6 +36,8 @@ def main():
     deathSlow = 7
     attack = 7
     run = 5
+    crouch = 18
+    wave = 10
 
     # .obj knight
 
@@ -67,6 +69,11 @@ def main():
 
     knight_Run = obj().objAnimation("./Animaciones/knight_animado/","knight_run_",run)
     weaponK_Run = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_run_",run)
+
+    # crouch
+
+    knight_Crouch = obj().objAnimation("./Animaciones/knight_animado/","knight_crouch_stand_",crouch)
+    weaponK_Crouch = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_crouch_stand_",crouch)
 
     #---------------------------------------------------------------------------------------
 
@@ -100,6 +107,11 @@ def main():
 
     hueteotl_Run = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_run_",run)
     weaponH_Run = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_run_",run)
+
+    # crouch
+
+    hueteotl_Crouch = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_crouch_stand_",crouch)
+    weaponH_Crouch = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_crouch_stand_",crouch)
 
     #---------------------------------------------------------------------------------------
 
@@ -167,10 +179,12 @@ def main():
     stand = True
     attack = False
     death = False
+    eludir = False
 
     stand_h = True
     attack_h = False 
     death_h = False
+    eludir_h = False
 
     countKnight = 0
     countHueteotl = 0
@@ -221,7 +235,8 @@ def main():
                 if countKnight >= (len(knight_Attack) - 1):
                     stand = True   
                     attack = False
-                    death_h = True
+                    if eludir_h == False:
+                        death_h = True
                     stand_h = False
                     typeofDeath = random.randint(0, 2)
                     countKnight = 0
@@ -236,7 +251,8 @@ def main():
                 if countHueteotl >= (len(hueteotl_Attack) - 1):
                     stand_h = True
                     attack_h = False
-                    death = True
+                    if eludir == False:
+                        death = True
                     stand = False
                     typeofDeath = random.randint(0, 2)
                     countHueteotl = 0
@@ -295,7 +311,7 @@ def main():
                             countKnight += 1
 
             # Evento huir de hueteotl
-            if stand_h == False and attack_h == False and death_h == False:
+            if stand_h == False and attack_h == False and death_h == False and eludir_h == False:
                 ang_h = -20
                 hueteotl = hueteotl_Run[countHueteotl]
                 weapon_h = weaponH_Run[countHueteotl]
@@ -310,7 +326,7 @@ def main():
                     pos_h += 2
 
             # Evento huir de knight
-            if stand == False and attack == False and death == False:
+            if stand == False and attack == False and death == False and eludir == False:
                 ang_k = 230
                 knight = knight_Run[countKnight]
                 weapon_k = knight_Run[countKnight]
@@ -324,35 +340,68 @@ def main():
                     countKnight += 1
                     pos_k -= 2
 
+            # Evento eludir ataque de hueteotl
+            if stand_h == False and attack_h == False and death_h == False and eludir_h:
+                hueteotl = hueteotl_Crouch[countHueteotl]
+                weapon_h = weaponH_Crouch[countHueteotl]
+                if countHueteotl >= (len(hueteotl_Crouch) - 1):
+                    countHueteotl = len(hueteotl_Crouch) - 1
+                    stand_h = True 
+                    eludir_h = False   
+                else:
+                   countHueteotl +=1 
+
+            # Evento eludir ataque de knight
+            if stand == False and attack == False and death == False and eludir:
+                knight = knight_Crouch[countKnight]
+                weapon_k = weaponK_Crouch[countKnight]
+                if countKnight >= (len(knight_Crouch) - 1):
+                    countKnight = len(knight_Crouch) - 1
+                    stand = True 
+                    eludir = False   
+                else:
+                   countKnight +=1 
 
             if event.type == pygame.KEYDOWN:    # Evento tecla presionada.
 
-                if event.key == pygame.K_w:     # Letra w ataca knight
+                if event.key == pygame.K_w:     # tecla w ataca knight
                     stand = False   
                     attack = True
                     countKnight = 0
 
-                if event.key == pygame.K_o:     # letra o ataca hueteolt
+                if event.key == pygame.K_o:     # tecla o ataca hueteolt
                     stand_h = False
                     attack_h =  True 
                     countHueteotl = 0
 
-                if event.key == pygame.K_p:     # letra o corre hueteolt
+                if event.key == pygame.K_p:     # tecla o corre hueteolt
                     stand_h = False
                     countHueteotl = 0 
                 
-                if event.key == pygame.K_q:     # letra q corre knight
+                if event.key == pygame.K_e:     # tecla q corre knight
                     stand = False
                     countKnight = 0 
 
-                if event.key == pygame.K_r:     # letra r, reinicia pelea
+                if event.key == pygame.K_i:     # tecla i elude hueteotl
+                    stand_h = False
+                    eludir_h = True
+                    countHueteotl = 0 
+
+                if event.key == pygame.K_q:     # tecla e elude knight
+                    stand = False
+                    eludir = True
+                    countKnight = 0 
+
+                if event.key == pygame.K_r:     # tecla r, reinicia pelea
                     stand = True
                     attack = False
                     death = False
+                    eludir = False
 
                     stand_h = True
                     attack_h = False 
                     death_h = False
+                    eludir_h = False
 
                     countKnight = 0
                     countHueteotl = 0
@@ -371,40 +420,33 @@ def main():
                     pygame.quit()
                     quit()
 
-                if event.key == pygame.K_l:     # Con la letra l prendo y apago la iluminacion
+                if event.key == pygame.K_l:     # Con la tecla l prendo y apago la iluminacion
                     light = not light
                     if(light):
                         glEnable(GL_LIGHTING)
                     else:
                         glDisable(GL_LIGHTING)
 
-                if event.key == pygame.K_m:     # Con la letra m, lo deja en formato malla o no (con o sin fondo).
+                if event.key == pygame.K_m:     # Con la tecla m, lo deja en formato malla o no (con o sin fondo).
                     if mode == GL_LINE:
                         mode = GL_FILL
                     else:
                         mode = GL_LINE
                     glPolygonMode( GL_FRONT_AND_BACK, mode)
 
-                if event.key == pygame.K_z:     # Con la letra z, activa el z-buffer
+                if event.key == pygame.K_z:     # Con la tecla z, activa el z-buffer
                     zBuffer = not zBuffer
                     if(zBuffer):
                         glEnable(GL_DEPTH_TEST)
                     else:
                         glDisable(GL_DEPTH_TEST)
 
-                if event.key == pygame.K_b:     # Con la letra b, activo cullface
+                if event.key == pygame.K_b:     # Con la tecla b, activo cullface
                     bfc = not bfc
                     if(bfc):
                         glEnable(GL_CULL_FACE)
                     else:
                         glDisable(GL_CULL_FACE)
-
-                if event.key == pygame.K_c:     # Con la letra c
-                    bfcCW = not bfcCW
-                    if(bfcCW):
-                        glFrontFace(GL_CW)
-                    else:
-                        glFrontFace(GL_CCW)
 
     #---------------------------------------------------------------------------------------
     
