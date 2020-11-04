@@ -122,7 +122,9 @@ def main():
 
     # Funcion que levanta la textura a memoria de video            
 
-    tex = texture.loadTexture("./knight_good.png")               
+    tex = texture.loadTexture("./knight_good.png") 
+
+    tex2 = texture.loadTexture("./knight.png")               
 
     tex3 = texture.loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
 
@@ -342,55 +344,76 @@ def main():
 
             # Evento eludir ataque de hueteotl
             if stand_h == False and attack_h == False and death_h == False and eludir_h:
-                hueteotl = hueteotl_Crouch[countHueteotl]
-                weapon_h = weaponH_Crouch[countHueteotl]
-                if countHueteotl >= (len(hueteotl_Crouch) - 1):
-                    countHueteotl = len(hueteotl_Crouch) - 1
-                    stand_h = True 
-                    eludir_h = False   
+                hueteotl = hueteotl_Run[countHueteotl]
+                weapon_h = weaponH_Run[countHueteotl]
+                if countHueteotl >= (len(hueteotl_Run) - 1):
+                    count_h += 1
+                    countHueteotl = 0
+                    if count_h >= 2:
+                        stand_h = True 
+                        eludir_h = False 
+                        count_h = 0  
                 else:
-                   countHueteotl +=1 
+                    countHueteotl +=1 
+                    if count_h == 0:
+                        pos_h += 2
+                    else:
+                        pos_h = 25
+                
 
             # Evento eludir ataque de knight
             if stand == False and attack == False and death == False and eludir:
-                knight = knight_Crouch[countKnight]
-                weapon_k = weaponK_Crouch[countKnight]
-                if countKnight >= (len(knight_Crouch) - 1):
-                    countKnight = len(knight_Crouch) - 1
-                    stand = True 
-                    eludir = False   
+                knight = knight_Run[countKnight]
+                weapon_k = weaponK_Run[countKnight]
+                if countKnight >= (len(knight_Run) - 1):
+                    count_k += 1
+                    countKnight = 0
+                    if count_k >= 2:
+                        stand = True 
+                        eludir = False  
+                        count_k = 0 
                 else:
-                   countKnight +=1 
+                    countKnight +=1 
+                    if count_k == 0:
+                        pos_k -= 2
+                    else:
+                        pos_k = -25
 
             if event.type == pygame.KEYDOWN:    # Evento tecla presionada.
 
                 if event.key == pygame.K_w:     # tecla w ataca knight
-                    stand = False   
-                    attack = True
-                    countKnight = 0
+                    if death == False and attack_h == False:
+                        stand = False   
+                        attack = True
+                        countKnight = 0
 
                 if event.key == pygame.K_o:     # tecla o ataca hueteolt
-                    stand_h = False
-                    attack_h =  True 
-                    countHueteotl = 0
+                    if death_h == False and attack == False:
+                        stand_h = False
+                        attack_h =  True 
+                        countHueteotl = 0
 
                 if event.key == pygame.K_p:     # tecla o corre hueteolt
-                    stand_h = False
-                    countHueteotl = 0 
+                    if death_h == False:
+                        stand_h = False
+                        countHueteotl = 0 
                 
                 if event.key == pygame.K_e:     # tecla q corre knight
-                    stand = False
-                    countKnight = 0 
+                    if death == False:
+                        stand = False
+                        countKnight = 0 
 
                 if event.key == pygame.K_i:     # tecla i elude hueteotl
-                    stand_h = False
-                    eludir_h = True
-                    countHueteotl = 0 
+                    if death_h == False:
+                        stand_h = False
+                        eludir_h = True
+                        countHueteotl = 0 
 
                 if event.key == pygame.K_q:     # tecla e elude knight
-                    stand = False
-                    eludir = True
-                    countKnight = 0 
+                    if death == False:
+                        stand = False
+                        eludir = True
+                        countKnight = 0 
 
                 if event.key == pygame.K_r:     # tecla r, reinicia pelea
                     stand = True
