@@ -31,6 +31,9 @@ def main():
     
     # Cargar archivos .obj.
 
+    fondoList = obj().objAnimation("./","fondo_", 0)
+    fondo = fondoList[0]
+
     stand = 39
     death = 5
     deathSlow = 7
@@ -124,7 +127,9 @@ def main():
 
     tex = texture.loadTexture("./knight_good.png") 
 
-    tex2 = texture.loadTexture("./knight.png")               
+    tex2 = texture.loadTexture("./knight.png") 
+
+    fondoIma = texture.loadTexture("./fondo2.jpg")              
 
     tex3 = texture.loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
 
@@ -146,10 +151,10 @@ def main():
     # Activo las luces ( 0 a 7 )
 
     glEnable(GL_LIGHT0)   
-    glLight(GL_LIGHT0, GL_DIFFUSE, [1.0,0.0,0.0,1])      
+    glLight(GL_LIGHT0, GL_DIFFUSE, [1,0,0,1])      
     glLight(GL_LIGHT0, GL_AMBIENT, [1,1,1,1])       
-    glLight(GL_LIGHT0, GL_POSITION, [0,100,-50,1])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
-    glLight(GL_LIGHT0, GL_SPECULAR, [1,0,0,1])
+    glLight(GL_LIGHT0, GL_POSITION, [0,10,20,0])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
+    glLight(GL_LIGHT0, GL_SPECULAR, [0,0,0,1])
 
     #---------------------------------------------------------------------------------------
 
@@ -160,7 +165,6 @@ def main():
 
     glEnable(GL_DEPTH_TEST)              # Comparaciones de profundidad y actualizar el bufer de profundidad.
 
-    #glClearColor(0,0,1,1)               # Color de fondo.
     #---------------------------------------------------------------------------------------
 
     # Variables
@@ -447,8 +451,10 @@ def main():
                     light = not light
                     if(light):
                         glEnable(GL_LIGHTING)
+                        glClearColor(0,0,0,1)
                     else:
                         glDisable(GL_LIGHTING)
+                        glClearColor(0.5,0.5,0.5,1)
 
                 if event.key == pygame.K_m:     # Con la tecla m, lo deja en formato malla o no (con o sin fondo).
                     if mode == GL_LINE:
@@ -483,7 +489,11 @@ def main():
         glEnableClientState(GL_NORMAL_ARRAY)               
         glEnableClientState(GL_TEXTURE_COORD_ARRAY)        
 
-    #---------------------------------------------------------------------------------------    
+    #---------------------------------------------------------------------------------------  
+    
+        # fondo
+           
+        draw.drawBack(fondo,fondoIma)
         
         # knight
 
