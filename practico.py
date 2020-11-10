@@ -22,16 +22,13 @@ def main():
     cw = 800
     ch = 600
     display = (cw,ch)
-    pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
-    
-
-
+    pygame.display.set_mode(display, DOUBLEBUF|OPENGL|OPENGLBLIT)
 
     #---------------------------------------------------------------------------------------  
     
     # Cargar archivos .obj.
 
-    fondoList = obj().objAnimation("./","fondo_", 0)
+    fondoList = obj().objAnimation("./Animaciones/fondo/","fondo_", 0)
     fondo = fondoList[0]
 
     stand = 39
@@ -123,13 +120,13 @@ def main():
     glEnable(GL_TEXTURE_2D)                         
     glActiveTexture(GL_TEXTURE0)       
 
-    # Funcion que levanta la textura a memoria de video            
+    # Funcion que levanta la textura a memoria de video         
 
-    tex = texture.loadTexture("./knight_good.png") 
+    fondoIma = texture.loadTexture("./Animaciones/fondo/fondo2.jpg")   
 
-    tex2 = texture.loadTexture("./knight.png") 
+    tex = texture.loadTexture("./Animaciones/knight_animado/knight_good.png") 
 
-    fondoIma = texture.loadTexture("./fondo2.jpg")              
+    tex2 = texture.loadTexture("./Animaciones/knight_animado/knight.png") 
 
     tex3 = texture.loadTexture("./Animaciones/weapon_knight_animada/weapon_k.png")
 

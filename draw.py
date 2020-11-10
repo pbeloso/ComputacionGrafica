@@ -32,6 +32,7 @@ def drawBack(obj,tex):
     glPushMatrix()
 
     glTranslatef(0, 0, -185)  # Traslacion. (derecha, arriba, profundida).
+    glRotatef(-90, 0,0,0)   # Rotacion (angulo, eje x, eje y, eje z).
     escala = 187
     glScalef(escala,escala,escala)
 
