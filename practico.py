@@ -6,8 +6,10 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GL.shaders import *
+
 from obj import *
 from event import *
+from sound import *
 
 import texture
 import draw
@@ -175,6 +177,8 @@ def main():
     light = False
 
     # Variables de animaciones
+
+    sonido = sound()
     
     eventos = events_obj()
     eventos.setTimeEvents()
@@ -211,6 +215,8 @@ def main():
                 pygame.quit()
                 quit()
 
+            if death or death_h:
+                sonido.startSound()
             # Evento incial stand knight
             if event.type == eventos.knight:
                 if stand:
