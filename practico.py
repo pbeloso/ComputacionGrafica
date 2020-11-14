@@ -28,7 +28,7 @@ def main():
 
 
     pygame.mixer.init()
-    pygame.mixer.music.load("./Sonidos/ganador.ogg")
+    pygame.mixer.music.load("./Sonidos/ganador.OGG")
 
     #---------------------------------------------------------------------------------------  
     
@@ -182,7 +182,6 @@ def main():
 
     # Variables de animaciones
 
-    sonido = sound()
     
     eventos = events_obj()
     eventos.setTimeEvents()
