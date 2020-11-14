@@ -28,8 +28,7 @@ def main():
 
 
     pygame.mixer.init()
-    pygame.mixer.music.load("./Sonidos/ganador.OGG")
-
+    
     #---------------------------------------------------------------------------------------  
     
     # Cargar archivos .obj.
@@ -163,7 +162,7 @@ def main():
 
     glMatrixMode(GL_PROJECTION)          # Activo el stack de matrices para la proyeccion.
     glLoadIdentity()                     # Cargo una identidad para asegurarme que comience vacio.
-    glViewport(0,0,cw*2,ch*2)            # Crea la matriz de escala, transforma de unidades arbitrarias a pixels.
+    glViewport(0,0,cw,ch)            # Crea la matriz de escala, transforma de unidades arbitrarias a pixels.
     glFrustum(-1, 1, -1, 1, 1, 1000)     # Crea la matriz de Proyeccion. volumen de vista.
 
     glEnable(GL_DEPTH_TEST)              # Comparaciones de profundidad y actualizar el bufer de profundidad.
@@ -182,7 +181,8 @@ def main():
 
     # Variables de animaciones
 
-    
+    son = sound()
+
     eventos = events_obj()
     eventos.setTimeEvents()
 
@@ -217,9 +217,8 @@ def main():
             if event.type == pygame.QUIT:       
                 pygame.quit()
                 quit()
-
-            if death or death_h:
-                pygame.mixer.music.play()
+            if death:
+                son.startSound()
             # Evento incial stand knight
             if event.type == eventos.knight:
                 if stand:
