@@ -26,6 +26,10 @@ def main():
     display = (cw,ch)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL|OPENGLBLIT)
 
+
+    pygame.mixer.init()
+    pygame.mixer.music.load("./Sonidos/ganador.ogg")
+
     #---------------------------------------------------------------------------------------  
     
     # Cargar archivos .obj.
@@ -216,7 +220,7 @@ def main():
                 quit()
 
             if death or death_h:
-                sonido.startSound()
+                pygame.mixer.music.play()
             # Evento incial stand knight
             if event.type == eventos.knight:
                 if stand:
