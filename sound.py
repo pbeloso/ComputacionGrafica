@@ -8,14 +8,31 @@ class sound:
         pygame.mixer.pre_init(44100, 16, 2, 4096) #frequency, size, channels, buffersize
         pygame.mixer.init()      
 
-        self.ganador = pygame.mixer.Sound("./Sonidos/ganador.ogg")
+        self.ataque_hueteolt = pygame.mixer.Sound("./Sonidos/ataque_hueteolt.ogg")
+        self.ataque_knight = pygame.mixer.Sound("./Sonidos/ataque_knight.ogg")
         
-    def startSound(self):
+        self.correr = pygame.mixer.Sound("./Sonidos/correr.ogg")
 
-            self.ganador.play(-1)
-            self.ganador.set_volume(0.2)
+    def startAtaqueHueteolt(self):
 
+            self.ataque_hueteolt.play(0)
+            self.ataque_hueteolt.set_volume(0.03)
+
+    def startAtaqueKnight(self):
+
+            self.ataque_knight.play(0)
+            self.ataque_knight.set_volume(0.03)
+    
+    def startCorrer(self):
+
+            self.correr.play(1)
+            
+            self.correr.set_volume(0.03)
+            
+     
+    def stopSound(self):
         
-    def stopSound(self, element):
-        
-            self.ganador.stop()
+            self.ataque_hueteolt.stop()
+            self.ataque_knight.stop()
+            self.correr.stop()
+

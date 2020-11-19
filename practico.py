@@ -26,9 +26,6 @@ def main():
     display = (cw,ch)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL|OPENGLBLIT)
 
-
-    pygame.mixer.init()
-    
     #---------------------------------------------------------------------------------------  
     
     # Cargar archivos .obj.
@@ -153,10 +150,10 @@ def main():
     # Activo las luces ( 0 a 7 )
 
     glEnable(GL_LIGHT0)   
-    glLight(GL_LIGHT0, GL_DIFFUSE, [1,0,0,1])      
+    glLight(GL_LIGHT0, GL_DIFFUSE, [1,1,1,1])      
     glLight(GL_LIGHT0, GL_AMBIENT, [1,1,1,1])       
-    glLight(GL_LIGHT0, GL_POSITION, [0,10,20,0])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
-    glLight(GL_LIGHT0, GL_SPECULAR, [0,0,0,1])
+    glLight(GL_LIGHT0, GL_POSITION, [0,10,20,1])      # [0,0,0,1] es luz puntual, [0,0,0,0] es luz direccional
+    glLight(GL_LIGHT0, GL_SPECULAR, [1,0,0,1])
 
     #---------------------------------------------------------------------------------------
 
@@ -181,20 +178,27 @@ def main():
 
     # Variables de animaciones
 
-    son = sound()
-
+    # Objetos de sonido y eventos 
+    sonido = sound()
+    
     eventos = events_obj()
     eventos.setTimeEvents()
+
+    # Variables logica del juego
 
     stand = True
     attack = False
     death = False
     eludir = False
+    rendirse = False
 
     stand_h = True
     attack_h = False 
     death_h = False
     eludir_h = False
+    rendirse_h = False
+
+    auxSound = False
 
     countKnight = 0
     countHueteotl = 0
@@ -217,8 +221,7 @@ def main():
             if event.type == pygame.QUIT:       
                 pygame.quit()
                 quit()
-            if death:
-                son.startSound()
+                
             # Evento incial stand knight
             if event.type == eventos.knight:
                 if stand:
@@ -246,8 +249,11 @@ def main():
                 if countKnight >= (len(knight_Attack) - 1):
                     stand = True   
                     attack = False
-                    if eludir_h == False:
+                    if eludir_h == False and rendirse_h == False:
                         death_h = True
+                        sonido.startAtaqueKnight()
+                    else:
+                        sonido.startAtaqueKnight()
                     stand_h = False
                     typeofDeath = random.randint(0, 2)
                     countKnight = 0
@@ -262,8 +268,12 @@ def main():
                 if countHueteotl >= (len(hueteotl_Attack) - 1):
                     stand_h = True
                     attack_h = False
-                    if eludir == False:
+                    if eludir == False and rendirse == False:
                         death = True
+                        sonido.startAtaqueHueteolt()
+                    else:
+                        stand = True
+                        sonido.startAtaqueHueteolt()
                     stand = False
                     typeofDeath = random.randint(0, 2)
                     countHueteotl = 0
@@ -272,7 +282,7 @@ def main():
                     countHueteotl += 1
 
             # Evento muerte de hueteotl, random de sus 3 muertes 
-            if death_h:
+            if death_h and rendirse_h == False:
                 if attack_h == False and stand_h == False:
                     if typeofDeath == 0:
                         hueteotl = hueteotl_Death0[countHueteotl]
@@ -297,7 +307,7 @@ def main():
                             countHueteotl += 1
             
             # Evento muerte de knight, random de sus 3 muertes
-            if death:
+            if death and rendirse == False:
                 if attack == False and stand == False:
                     if typeofDeath == 0:
                         knight = knight_Death0[countKnight]
@@ -321,33 +331,44 @@ def main():
                         else:
                             countKnight += 1
 
-            # Evento huir de hueteotl
+            # Evento rendirse de hueteotl
             if stand_h == False and attack_h == False and death_h == False and eludir_h == False:
+                rendirse_h = True
+                if auxSound == False:
+                    sonido.startCorrer()
+                    auxSound = True
                 ang_h = -20
                 hueteotl = hueteotl_Run[countHueteotl]
                 weapon_h = weaponH_Run[countHueteotl]
                 if countHueteotl >= (len(hueteotl_Run) - 1):
                     count_h += 1
                     countHueteotl = 0
-                    if count_h >= 7:
+                    if count_h >= 8:
                         stand_h = True 
                         count_h = 0   
                 else:
                     countHueteotl += 1
                     pos_h += 2
 
-            # Evento huir de knight
+            # Evento rendirse de knight
             if stand == False and attack == False and death == False and eludir == False:
+                rendirse = True
+                if auxSound == False:
+                    sonido.startCorrer()
+                    auxSound = True
                 ang_k = 230
                 knight = knight_Run[countKnight]
                 weapon_k = knight_Run[countKnight]
                 if countKnight >= (len(knight_Run) - 1):
                     count_k += 1 
                     countKnight = 0
-                    if count_k >= 7:
+                    if count_k >= 8:
                         stand = True
                         count_k = 0
                 else:
+                    if countKnight < 0:
+                        sonido.startRendirseKnight()
+                        sonido.startCorrer()
                     countKnight += 1
                     pos_k -= 2
 
@@ -391,35 +412,37 @@ def main():
             if event.type == pygame.KEYDOWN:    # Evento tecla presionada.
 
                 if event.key == pygame.K_w:     # tecla w ataca knight
-                    if death == False and attack_h == False:
+                    if death == False and attack_h == False and rendirse == False:
                         stand = False   
                         attack = True
                         countKnight = 0
 
                 if event.key == pygame.K_o:     # tecla o ataca hueteolt
-                    if death_h == False and attack == False:
+                    if death_h == False and attack == False and rendirse_h == False:
                         stand_h = False
                         attack_h =  True 
                         countHueteotl = 0
 
-                if event.key == pygame.K_p:     # tecla o corre hueteolt
-                    if death_h == False:
+                if event.key == pygame.K_p:     # tecla o rendirse hueteolt
+                    auxSound = False
+                    if death_h == False and rendirse_h == False:
                         stand_h = False
                         countHueteotl = 0 
                 
-                if event.key == pygame.K_e:     # tecla q corre knight
-                    if death == False:
+                if event.key == pygame.K_e:     # tecla q rendirse knight
+                    auxSound = False
+                    if death == False and rendirse == False:
                         stand = False
                         countKnight = 0 
 
                 if event.key == pygame.K_i:     # tecla i elude hueteotl
-                    if death_h == False:
+                    if death_h == False and rendirse_h == False:
                         stand_h = False
                         eludir_h = True
                         countHueteotl = 0 
 
                 if event.key == pygame.K_q:     # tecla e elude knight
-                    if death == False:
+                    if death == False and rendirse == False:
                         stand = False
                         eludir = True
                         countKnight = 0 
@@ -429,11 +452,16 @@ def main():
                     attack = False
                     death = False
                     eludir = False
+                    rendirse = False
 
                     stand_h = True
                     attack_h = False 
                     death_h = False
                     eludir_h = False
+                    rendirse_h = False
+
+                    auxSound = False
+                    sonido.stopSound()
 
                     countKnight = 0
                     countHueteotl = 0

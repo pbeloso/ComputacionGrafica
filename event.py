@@ -7,5 +7,5 @@ class events_obj():
         
 
     def setTimeEvents(self):
-        pygame.time.set_timer(self.knight, 170)
-        pygame.time.set_timer(self.hueteotl, 170)
+        pygame.time.set_timer(self.knight, 150)
+        pygame.time.set_timer(self.hueteotl, 150)
