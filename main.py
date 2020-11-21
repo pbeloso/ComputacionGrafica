@@ -72,11 +72,6 @@ def main():
     knight_Run = obj().objAnimation("./Animaciones/knight_animado/","knight_run_",run)
     weaponK_Run = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_run_",run)
 
-    # crouch
-
-    knight_Crouch = obj().objAnimation("./Animaciones/knight_animado/","knight_crouch_stand_",crouch)
-    weaponK_Crouch = obj().objAnimation("./Animaciones/weapon_knight_animada/","weapon_k_crouch_stand_",crouch)
-
     #---------------------------------------------------------------------------------------
 
     # .obj hueteotl 
@@ -109,11 +104,6 @@ def main():
 
     hueteotl_Run = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_run_",run)
     weaponH_Run = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_run_",run)
-
-    # crouch
-
-    hueteotl_Crouch = obj().objAnimation("./Animaciones/hueteotl_animado/","hueteotl_crouch_stand_",crouch)
-    weaponH_Crouch = obj().objAnimation("./Animaciones/weapon_hueteotl_animada/","weapon_crouch_stand_",crouch)
 
     #---------------------------------------------------------------------------------------
 
