@@ -423,13 +423,13 @@ def main():
                         attack_h =  True 
                         countHueteotl = 0
 
-                if event.key == pygame.K_p:     # tecla o rendirse hueteolt
+                if event.key == pygame.K_p:     # tecla p rendirse hueteolt
                     auxSound = False
                     if death_h == False and rendirse_h == False:
                         stand_h = False
                         countHueteotl = 0 
                 
-                if event.key == pygame.K_e:     # tecla q rendirse knight
+                if event.key == pygame.K_e:     # tecla e rendirse knight
                     auxSound = False
                     if death == False and rendirse == False:
                         stand = False
@@ -441,7 +441,7 @@ def main():
                         eludir_h = True
                         countHueteotl = 0 
 
-                if event.key == pygame.K_q:     # tecla e elude knight
+                if event.key == pygame.K_q:     # tecla q elude knight
                     if death == False and rendirse == False:
                         stand = False
                         eludir = True
