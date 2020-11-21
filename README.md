@@ -1,4 +1,4 @@
-# ComputacionGrafica
+# Obligatorio Introduccion a la computacion grafica 2020
 
 Obligatorio Introduccion a la computacion grafica 2020
 
