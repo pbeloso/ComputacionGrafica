@@ -4,13 +4,14 @@ Obligatorio Introduccion a la computacion grafica 2020
 
 Lenguaje: 
 
-Python 2.7.16
+- Python 2.7.16
 
 Librerías: 
 
-pygame
-numpy
-random
+- pygame
+- numpy
+- random
+- opengl
 
 
 Trabajo propuesto
